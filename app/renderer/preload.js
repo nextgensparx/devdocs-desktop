@@ -47,3 +47,7 @@ ipc.on('zoom-out', () => {
 ipc.on('zoom-reset', () => {
   setZoom(1.0)
 })
+
+global.ipcOn = (channel, listener) => {
+  ipc.on(channel, listener)
+}

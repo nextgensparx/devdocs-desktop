@@ -72,12 +72,21 @@ function createWebView() {
     webview.focus()
   })
 
-  ipc.on('link', (e, url) => {
+  let searchQueue = [];
+  let domReady = false;
+
+  ipc.on('search', (e, url) => {
     const route = url.replace('devdocs://', '')
     const SEACH_RE = /^search\/(.+)$/
     if (SEACH_RE.test(route)) {
-      const keyword = SEACH_RE.exec(route)[1]
-      webview.src = `https://devdocs.io/#q=${keyword}`
+      const query = SEACH_RE.exec(route)[1]
+      console.log('search send: ', query)
+      // webview.src = `https://devdocs.io/#q=${query}`
+      if (!domReady) {
+        searchQueue.push(query);
+      } else {
+        webview.send('search', query)
+      }
     }
   })
 
@@ -94,6 +103,7 @@ function createWebView() {
   })
 
   webview.addEventListener('dom-ready', () => {
+    domReady = true;
     // Insert custom css
     const css = `
     ._app button:focus {
@@ -105,6 +115,13 @@ function createWebView() {
     `
     webview.insertCSS(css + fs.readFileSync(configDir('custom.css'), 'utf8'))
     webview.executeJavaScript(fs.readFileSync(configDir('custom.js'), 'utf8'))
+    webview.executeJavaScript(fs.readFileSync(path.join(__dirname, 'postload.js'), 'utf8'), () => {
+      for (const query of searchQueue) {
+        webview.send('search', query)
+      }
+      searchQueue = []
+    })
+
     webview.focus()
     // Add context menus
     contextMenu({

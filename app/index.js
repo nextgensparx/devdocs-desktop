@@ -19,7 +19,13 @@ let mainWindow
 let isQuitting = false
 let urlToOpen
 
-const isAlreadyRunning = app.makeSingleInstance(() => {
+const isAlreadyRunning = app.makeSingleInstance((args, workingDirectory) => {
+  console.log(args, workingDirectory);
+  console.log(argv);
+  args = getActualArgs(args)
+  for (const url of args) {
+    openUrl(url)
+  }
   if (mainWindow) {
     if (mainWindow.isMinimized()) {
       mainWindow.restore()
@@ -69,7 +75,7 @@ function createMainWindow() {
   /*/
   win.setAutoHideMenuBar(true)
   win.setMenuBarVisibility(false)
-  
+
   win.loadURL(url)
 
   win.on('close', e => {
@@ -119,7 +125,8 @@ app.on('ready', () => {
     mainWindow.show()
     updater.init()
     if (urlToOpen) {
-      mainWindow.webContents.send('link', urlToOpen)
+      console.log('initial send search command');
+      mainWindow.webContents.send('search', urlTo
     }
   })
 })
