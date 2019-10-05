@@ -44,6 +44,24 @@ body {
   margin: 0;
 }
 
+.box {
+  padding: .625rem 1rem;
+  background-color: #F5F5F5;
+  border: 1px solid #D8D8D8;
+  border-radius: 3px;
+}
+
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.loader {
+  padding: 1rem 2rem ;
+}
+
 .is-darwin .header {
   display: flex;
 }
@@ -61,4 +79,10 @@ body {
   border-bottom: 1px solid #151515;
   border-right: 1px solid #000;
   color: #cbd0d0;
+}
+
+.is-dark-mode .box {
+  color: #cbd0d0;
+  background-color: #2F3235;
+  border-color: #000;
 }

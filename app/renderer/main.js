@@ -37,6 +37,11 @@ function createHeader() {
   document.body.appendChild(header)
 }
 
+function removeLoader() {
+  const loaderWrapper = document.querySelector('.loader-wrapper');
+  loaderWrapper.remove();
+}
+
 function createWebView() {
   // Create webview
   const webview = document.createElement('webview')
@@ -157,6 +162,7 @@ function createWebView() {
 
 ensureCustomFiles()
 createHeader()
+removeLoader();
 webview = createWebView()
 
 document.body.classList.add(`is-${os.platform()}`)
